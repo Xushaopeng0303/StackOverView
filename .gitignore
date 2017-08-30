@@ -1,0 +1,16 @@
+gen/
+.gradle/
+build/
+/*/build/ 
+local.properties
+proguard/
+*.idea/
+*.iml
+.gradle
+gradlew
+gradlew.bat
+gradle.properties
+/.idea
+.DS_Store
+/*/*.iml
+app/app.iml

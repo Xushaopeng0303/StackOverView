@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="/Users/baidu/Work/StackOverView/app/build/intermediates/exploded-aar/StackOverView/lib/unspecified/classes.jar"
+        jumboMode="false"
+        revision="26.0.1"
+        sha1="82ea4df40b9cd2b6f91ce124e4d5c2a060724e51">
+        <dex dex="/Users/baidu/Work/StackOverView/app/build/intermediates/pre-dexed/debug/classes-61572d45ff0ef46387d9cfc00c5e373f8409002a.jar" />
+    </item>
+    <item
         jar="/Users/baidu/Android_Project/StackOverView/app/build/intermediates/exploded-aar/StackOverView/lib/unspecified/classes.jar"
         jumboMode="false"
         revision="26.0.1"

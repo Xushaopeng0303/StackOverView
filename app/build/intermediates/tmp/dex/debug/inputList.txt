@@ -1,2 +1,0 @@
-/Users/baidu/Android_Project/StackOverView/app/build/intermediates/classes/debug
-/Users/baidu/Android_Project/StackOverView/app/build/intermediates/pre-dexed/debug/classes-fa2fbe0b922fe94ef521e3f7da4500c8dd387b09.jar
