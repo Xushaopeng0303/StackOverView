@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/baidu/Android_Project/StackOverView/app/build/intermediates/exploded-aar/StackOverView/lib/unspecified/classes.jar"
+        jumboMode="false"
+        revision="26.0.1"
+        sha1="1e96dcec351b959d4ca6e39af3eafe12faff9063">
+        <dex dex="/Users/baidu/Android_Project/StackOverView/app/build/intermediates/pre-dexed/debug/classes-fa2fbe0b922fe94ef521e3f7da4500c8dd387b09.jar" />
+    </item>
+
+</items>
