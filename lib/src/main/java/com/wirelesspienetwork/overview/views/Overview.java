@@ -29,6 +29,7 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
 
     public interface RecentViewsCallbacks {
         void onCardDismissed(int position);
+
         void onAllCardsDismissed();
     }
 
@@ -52,17 +53,20 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
         init(context);
     }
 
-    private void init(Context context)
-    {
+    private void init(Context context) {
         mConfig = new OverviewConfiguration(context);
     }
 
-    /** Sets the callbacks */
+    /**
+     * Sets the callbacks
+     */
     public void setCallbacks(RecentViewsCallbacks cb) {
         mCallbacks = cb;
     }
 
-    /** Set/get the bsp root node */
+    /**
+     * Set/get the bsp root node
+     */
     public void setTaskStack(OverviewAdapter adapter) {
 
         if (mStackView != null) {

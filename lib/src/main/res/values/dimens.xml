@@ -43,4 +43,7 @@
     <!-- The min alpha to apply to a task affiliation group color. -->
     <item name="recents_task_affiliation_color_min_alpha_percentage" format="float" type="dimen">0.6</item>
 
+    <dimen name="status_bar_height">@*android:dimen/status_bar_height</dimen>
+    <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
+
 </resources>

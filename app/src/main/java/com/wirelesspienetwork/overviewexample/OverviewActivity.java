@@ -38,25 +38,21 @@ import java.util.Random;
 /**
  * The main Recents activity that is started from AlternateRecentsComponent.
  */
-public class OverviewActivity extends Activity implements Overview.RecentViewsCallbacks
-{
+public class OverviewActivity extends Activity implements Overview.RecentViewsCallbacks {
     boolean mVisible;
-    // Top level views
-    Overview mRecentsView;
+    Overview mRecentView;
 
-    /** Called with the activity is first created. */
+    /**
+     * Called with the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // For the non-primary user, ensure that the SystemSericesProxy is initialized
-
-        // Initialize the widget host (the host id is static and does not change)
-
         // Set the Recents layout
         setContentView(R.layout.recents);
-        mRecentsView = (Overview) findViewById(R.id.recents_view);
-        mRecentsView.setCallbacks(this);
-        mRecentsView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+        mRecentView = findViewById(R.id.recents_view);
+        mRecentView.setCallbacks(this);
+        mRecentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
@@ -94,16 +90,14 @@ public class OverviewActivity extends Activity implements Overview.RecentViewsCa
         mVisible = true;
 
         ArrayList<Integer> models = new ArrayList<>();
-        for(int i = 0; i < 10; ++i)
-        {
+        for (int i = 0; i < 10; ++i) {
             Random random = new Random();
             random.setSeed(i);
             int color = Color.argb(255, random.nextInt(255), random.nextInt(255), random.nextInt(255));
             models.add(color);
         }
 
-        final OverviewAdapter stack = new OverviewAdapter<ViewHolder<View, Integer>, Integer>(models)
-        {
+        final OverviewAdapter stack = new OverviewAdapter<ViewHolder<View, Integer>, Integer>(models) {
             @Override
             public ViewHolder onCreateViewHolder(Context context, ViewGroup parent) {
                 View v = View.inflate(context, R.layout.recents_dummy, null);
@@ -116,7 +110,7 @@ public class OverviewActivity extends Activity implements Overview.RecentViewsCa
             }
         };
 
-        mRecentsView.setTaskStack(stack);
+        mRecentView.setTaskStack(stack);
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
