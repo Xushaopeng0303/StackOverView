@@ -22,7 +22,7 @@ public abstract class StackViewAdapter<VH extends ViewHolder, Model extends Obje
 
     private Callbacks mCallbacks;
 
-    //这个只是单纯用来计数的
+    // 这个只是单纯用来计数的
     private List<Model> mItems = new ArrayList<>();
 
     protected StackViewAdapter(List<Model> models) {
@@ -109,7 +109,6 @@ public abstract class StackViewAdapter<VH extends ViewHolder, Model extends Obje
     }
 
     public final VH createViewHolder(Context context, Configuration config) {
-
         StackViewCard container = new StackViewCard(context);
         container.setConfig(config);
         VH vh = onCreateViewHolder(context, container);

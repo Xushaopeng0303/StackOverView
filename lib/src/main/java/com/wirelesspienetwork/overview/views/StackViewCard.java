@@ -151,7 +151,7 @@ public class StackViewCard extends FrameLayout {
     /**
      * Animates this task view as it enters recent
      */
-    void startEnterRecentAnimation(final ViewAnimation.OverviewCardEnterContext ctx) {
+    void startEnterRecentAnimation(final ViewAnimation.CardEnterContext ctx) {
         final CardTransform transform = ctx.currentTaskTransform;
 
         // Animate the tasks up

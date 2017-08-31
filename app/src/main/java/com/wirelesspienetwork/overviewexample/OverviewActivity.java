@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.wirelesspienetwork.overview.model.StackViewAdapter;
 import com.wirelesspienetwork.overview.model.ViewHolder;
-import com.wirelesspienetwork.overview.views.Overview;
+import com.wirelesspienetwork.overview.views.OverView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +23,7 @@ import java.util.Random;
  * The main Recent activity that is started from AlternateRecentComponent.
  */
 public class OverviewActivity extends Activity implements View.OnClickListener {
-    Overview mRecentView;
+    OverView mRecentView;
     ArrayList<WindowModel> mWindowDataList;
     StackViewAdapter mAdapter;
 
@@ -115,7 +115,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener {
         };
         mRecentView = findViewById(R.id.recent_view);
         mRecentView.setTaskStack(mAdapter);
-        mRecentView.setCallbacks(new Overview.RecentViewsCallbacks() {
+        mRecentView.setCallbacks(new OverView.RecentViewsCallbacks() {
             @Override
             public void onCardDismissed(int position) {
                 Log.d("xsp", "第几个Card消失：" + position);

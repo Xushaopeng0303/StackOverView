@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.wirelesspienetwork.overview.views;
 
 import android.animation.Animator;
@@ -35,22 +19,24 @@ import com.wirelesspienetwork.overview.misc.Configuration;
  * events and translates / fades / animates the view as it is dismissed.
  */
 class SwipeHelper {
+    private static final boolean ALLOW_SWIPE_TOWARDS_START = true;
+    private static final boolean ALLOW_SWIPE_TOWARDS_END = true;
+
+
     static final int X = 0;
-    static final int Y = 1;
+    private static final int Y = 1;
 
     private static LinearInterpolator sLinearInterpolator = new LinearInterpolator();
 
-    private static final float SWIPE_ESCAPE_VELOCITY = 100f; // dp/sec
-    private  static final int DEFAULT_ESCAPE_ANIMATION_DURATION = 75; // ms
-    private  static final int MAX_ESCAPE_ANIMATION_DURATION = 150; // ms
-    private  static final int MAX_DISMISS_VELOCITY = 2000; // dp/sec
-    private static final int SNAP_ANIM_LEN = 250; // ms
+    private static final float SWIPE_ESCAPE_VELOCITY = 500f; // dp/sec
+    private static final int DEFAULT_ESCAPE_ANIMATION_DURATION = 75; // ms
+    private static final int MAX_ESCAPE_ANIMATION_DURATION = 150; // ms
+    private static final int MAX_DISMISS_VELOCITY = 2000; // dp/sec
+    private static final int SWIPE_BACK_ANIM_DURATION = 200; // ms
 
-    private static final float ALPHA_FADE_START = 0.15f; // fraction of thumbnail width
-                                                 // where fade starts
-    private static final float ALPHA_FADE_END = 0.65f; // fraction of thumbnail width
-                                              // beyond which alpha->0
-    private float mMinAlpha = 0f;
+    // 左右滑动消失时起始Alpha值和终止Alpha值
+    private static final float ALPHA_FADE_START = 0.15f;
+    private static final float ALPHA_FADE_END = 0.85f;
 
     private float mPagingTouchSlop;
     private Callback mCallback;
@@ -63,13 +49,9 @@ class SwipeHelper {
     private View mCurrView;
     private float mDensityScale;
 
-    private static final boolean mAllowSwipeTowardsStart = true;
-    private static final boolean mAllowSwipeTowardsEnd = true;
+    private Configuration mConfig;
 
-    Configuration mConfig;
-
-    public SwipeHelper(int swipeDirection, Callback callback, float densityScale,
-            float pagingTouchSlop, Configuration config) {
+    SwipeHelper(int swipeDirection, Callback callback, float densityScale, float pagingTouchSlop, Configuration config) {
         mCallback = callback;
         mSwipeDirection = swipeDirection;
         mVelocityTracker = VelocityTracker.obtain();
@@ -92,14 +74,11 @@ class SwipeHelper {
     }
 
     private ObjectAnimator createTranslationAnimation(View v, float newPos) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(v,
-                mSwipeDirection == X ? View.TRANSLATION_X : View.TRANSLATION_Y, newPos);
-        return anim;
+        return ObjectAnimator.ofFloat(v, mSwipeDirection == X ? View.TRANSLATION_X : View.TRANSLATION_Y, newPos);
     }
 
     private float getPerpendicularVelocity(VelocityTracker vt) {
-        return mSwipeDirection == X ? vt.getYVelocity() :
-                vt.getXVelocity();
+        return mSwipeDirection == X ? vt.getYVelocity() : vt.getXVelocity();
     }
 
     private void setTranslation(View v, float translate) {
@@ -115,11 +94,7 @@ class SwipeHelper {
         return mSwipeDirection == X ? dm.widthPixels : dm.heightPixels;
     }
 
-    public void setMinAlpha(float minAlpha) {
-        mMinAlpha = minAlpha;
-    }
-
-    float getAlphaForOffset(View view) {
+    private float getAlphaForOffset(View view) {
         float viewSize = getSize(view);
         final float fadeSize = ALPHA_FADE_END * viewSize;
         float result = 1.0f;
@@ -131,10 +106,10 @@ class SwipeHelper {
         }
         result = Math.min(result, 1.0f);
         result = Math.max(result, 0f);
-        return Math.max(mMinAlpha, result);
+        return Math.max(0f, result);
     }
 
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    boolean onInterceptTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
 
         switch (action) {
@@ -185,9 +160,7 @@ class SwipeHelper {
         }
         int duration = MAX_ESCAPE_ANIMATION_DURATION;
         if (velocity != 0) {
-            duration = Math.min(duration,
-                                (int) (Math.abs(newPos - getTranslation(view)) *
-                                        1000f / Math.abs(velocity)));
+            duration = Math.min(duration, (int) (Math.abs(newPos - getTranslation(view)) * 1000f / Math.abs(velocity)));
         } else {
             duration = DEFAULT_ESCAPE_ANIMATION_DURATION;
         }
@@ -215,10 +188,10 @@ class SwipeHelper {
         anim.start();
     }
 
-    private void snapChild(final View view, float velocity) {
+    private void snapChild(final View view) {
         final boolean canAnimViewBeDismissed = mCallback.canChildBeDismissed(view);
         ValueAnimator anim = createTranslationAnimation(view, 0);
-        int duration = SNAP_ANIM_LEN;
+        int duration = SWIPE_BACK_ANIM_DURATION;
         anim.setDuration(duration);
         anim.setInterpolator(mConfig.linearOutSlowInInterpolator);
         anim.addUpdateListener(new AnimatorUpdateListener() {
@@ -242,7 +215,7 @@ class SwipeHelper {
         anim.start();
     }
 
-    public boolean onTouchEvent(MotionEvent ev) {
+    boolean onTouchEvent(MotionEvent ev) {
         if (!mDragging) {
             if (!onInterceptTouchEvent(ev)) {
                 return mCurrView != null;
@@ -289,7 +262,7 @@ class SwipeHelper {
 
     private boolean isValidSwipeDirection(float amount) {
         if (mSwipeDirection == X) {
-            return (amount <= 0) ? mAllowSwipeTowardsStart : mAllowSwipeTowardsEnd;
+            return (amount <= 0) ? ALLOW_SWIPE_TOWARDS_START : ALLOW_SWIPE_TOWARDS_END;
         }
 
         // Vertical swipes are always valid.
@@ -314,12 +287,10 @@ class SwipeHelper {
                 && (childSwipedFastEnough || childSwipedFarEnough);
 
         if (dismissChild) {
-            // flingadingy
             dismissChild(mCurrView, childSwipedFastEnough ? velocity : 0f);
         } else {
-            // snappity
             mCallback.onDragCancelled(mCurrView);
-            snapChild(mCurrView, velocity);
+            snapChild(mCurrView);
         }
     }
 

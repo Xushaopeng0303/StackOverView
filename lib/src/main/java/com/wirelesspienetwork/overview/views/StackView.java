@@ -52,7 +52,7 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
     boolean mAwaitingFirstLayout = true;
     boolean mStartEnterAnimationRequestedAfterLayout;
     boolean mStartEnterAnimationCompleted;
-    ViewAnimation.OverviewCardEnterContext mStartEnterAnimationContext;
+    ViewAnimation.CardEnterContext mStartEnterAnimationContext;
     int[] mTmpVisibleRange = new int[2];
     Rect mTmpRect = new Rect();
     CardTransform mTmpTransform = new CardTransform();
@@ -411,7 +411,7 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
     /**
      * Requests this task stacks to start it's enter-recent animation
      */
-    public void startEnterRecentAnimation(ViewAnimation.OverviewCardEnterContext ctx) {
+    public void startEnterRecentAnimation(ViewAnimation.CardEnterContext ctx) {
         // If we are still waiting to layout, then just defer until then
         if (mAwaitingFirstLayout) {
             mStartEnterAnimationRequestedAfterLayout = true;

@@ -25,7 +25,7 @@ import android.widget.FrameLayout;
 import com.wirelesspienetwork.overview.misc.Configuration;
 import com.wirelesspienetwork.overview.model.StackViewAdapter;
 
-public class Overview extends FrameLayout implements StackView.Callbacks {
+public class OverView extends FrameLayout implements StackView.Callbacks {
 
     public interface RecentViewsCallbacks {
         void onCardDismissed(int position);
@@ -40,17 +40,17 @@ public class Overview extends FrameLayout implements StackView.Callbacks {
 
     Rect mStackBounds = new Rect();
 
-    public Overview(Context context) {
+    public OverView(Context context) {
         super(context);
         init(context);
     }
 
-    public Overview(Context context, AttributeSet attrs) {
+    public OverView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public Overview(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OverView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

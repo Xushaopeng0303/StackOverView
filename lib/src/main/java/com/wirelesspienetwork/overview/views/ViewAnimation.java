@@ -5,9 +5,12 @@ import android.graphics.Rect;
 
 import com.wirelesspienetwork.overview.misc.ReferenceCountedTrigger;
 
+/**
+ * StackView 动画
+ */
 class ViewAnimation {
 
-    static class OverviewCardEnterContext {
+    static class CardEnterContext {
         // A trigger to run some logic when all the animations complete.  This works around the fact
         // that it is difficult to coordinate ViewPropertyAnimators
         ReferenceCountedTrigger postAnimationTrigger;
@@ -15,7 +18,6 @@ class ViewAnimation {
         ValueAnimator.AnimatorUpdateListener updateListener;
 
         // These following properties are updated for each task view we start the enter animation on
-
         // Whether or not the current task occludes the launch target
         boolean currentTaskOccludesLaunchTarget;
         // The task rect for the current stack
@@ -27,7 +29,7 @@ class ViewAnimation {
         // The total number of task views
         int currentStackViewCount;
 
-        public OverviewCardEnterContext(ReferenceCountedTrigger t) {
+        public CardEnterContext(ReferenceCountedTrigger t) {
             postAnimationTrigger = t;
         }
     }
