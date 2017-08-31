@@ -7,33 +7,26 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
 
 
-/* The transform state for a task view */
+/**
+ * StackViewCard 变换状态
+ */
 class CardTransform {
     private int startDelay = 0;
     int translationY = 0;
     float translationZ = 0;
-    public float scale = 1f;
+    float scale = 1f;
     public float alpha = 1f;
-    public boolean visible = false;
-    public Rect rect = new Rect();
+    boolean visible = false;
+    Rect rect = new Rect();
     float p = 0f;
 
     CardTransform() {
-        // Do nothing
+
     }
 
-    public CardTransform(CardTransform o) {
-        startDelay = o.startDelay;
-        translationY = o.translationY;
-        translationZ = o.translationZ;
-        scale = o.scale;
-        alpha = o.alpha;
-        visible = o.visible;
-        rect.set(o.rect);
-        p = o.p;
-    }
-
-    /** Resets the current transform */
+    /**
+     * Resets the current transform
+     */
     void reset() {
         startDelay = 0;
         translationY = 0;
@@ -45,20 +38,26 @@ class CardTransform {
         p = 0f;
     }
 
-    /** Convenience functions to compare against current property values */
+    /**
+     * Convenience functions to compare against current property values
+     */
     private boolean hasAlphaChangedFrom(float v) {
         return (Float.compare(alpha, v) != 0);
     }
+
     private boolean hasScaleChangedFrom(float v) {
         return (Float.compare(scale, v) != 0);
     }
+
     private boolean hasTranslationYChangedFrom(float v) {
         return (Float.compare(translationY, v) != 0);
     }
 
-    /** Applies this transform to a view. */
+    /**
+     * Applies this transform to a view.
+     */
     void applyToTaskView(View v, int duration, Interpolator interp, boolean allowLayers,
-            boolean allowShadows, ValueAnimator.AnimatorUpdateListener updateCallback) {
+                         boolean allowShadows, ValueAnimator.AnimatorUpdateListener updateCallback) {
         // Check to see if any properties have changed, and update the task view
         if (duration > 0) {
             ViewPropertyAnimator anim = v.animate();
@@ -69,8 +68,7 @@ class CardTransform {
                 anim.translationY(translationY);
             }
             if (hasScaleChangedFrom(v.getScaleX())) {
-                anim.scaleX(scale)
-                    .scaleY(scale);
+                anim.scaleX(scale).scaleY(scale);
                 requiresLayers = true;
             }
             if (hasAlphaChangedFrom(v.getAlpha())) {
@@ -100,7 +98,9 @@ class CardTransform {
         }
     }
 
-    /** Reset the transform on a view. */
+    /**
+     * Reset the transform on a view.
+     */
     static void reset(View v) {
         v.setTranslationX(0f);
         v.setTranslationY(0f);

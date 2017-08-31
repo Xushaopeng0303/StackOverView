@@ -1,7 +1,6 @@
 package com.wirelesspienetwork.overview.views;
 
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.wirelesspienetwork.overview.misc.Configuration;
 import com.wirelesspienetwork.overview.misc.Utilities;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 class StackViewLayoutAlgorithm {
 
     // 最小卡片的显示比率
-    private static final float STACK_PEEK_MIN_SCALE = 0.9f;
+    private static final float STACK_PEEK_MIN_SCALE = 0.95f;
 
     private Configuration mConfig;
 
@@ -25,27 +24,24 @@ class StackViewLayoutAlgorithm {
     float mMinScrollP;
     float mMaxScrollP;
     float mInitialScrollP;
-    private int mWithinAffiliationOffset;
     private int mBetweenAffiliationOffset;
 
-    //存放个个cardview的比率
+    // 存放每个CardView的比率
     private HashMap<Integer, Float> mTaskProgressMap = new HashMap<>();
 
     // Log function
-    private static final float X_SCALE = 1.75f;  // The large the X_SCALE, the longer the flat area of the curve
+    private static final float X_SCALE = 1.75f;
     private static final float LOG_BASE = 3000;
     private static final int PRECISION_STEPS = 250;
 
-    //xp[PRECISION_STEPS] 这个是每段x的平均渐进累加值，与弧度渐进值的靠近比率。也就是说会越来越快
+    // xp[PRECISION_STEPS] 这个是每段x的平均渐进累加值，与弧度渐进值的靠近比率。也就是说会越来越快
     private static float[] xp;
 
-    //当前阶段总弧度，所占总体的百分比() （0->1）
+    // 当前阶段总弧度，所占总体的百分比() （0->1）
     private static float[] px;
 
     StackViewLayoutAlgorithm(Configuration config) {
         mConfig = config;
-
-        // Precompute the path
         initializeCurve();
     }
 
@@ -70,16 +66,14 @@ class StackViewLayoutAlgorithm {
         mTaskRect.set(left, mStackRect.top,
                 left + width, mStackRect.top + height);
 
-        // Update the affiliation offsets
-        //这里设置cardview之间的各种参数
+        // 这里设置CardView之间的各种参数，Update the affiliation offsets
         float visibleTaskPct = 0.5f;
-        mWithinAffiliationOffset = 0;
         mBetweenAffiliationOffset = (int) (visibleTaskPct * mTaskRect.height());
     }
 
     /**
      * Computes the minimum and maximum scroll progress values.  This method may be called before
-     * the RecentsConfiguration is set, so we need to pass in the alt-tab state.
+     * the RecentConfiguration is set, so we need to pass in the alt-tab state.
      */
     void computeMinMaxScroll(int itemCount) {
         // Clear the progress map
@@ -94,13 +88,6 @@ class StackViewLayoutAlgorithm {
         // Note that we should account for the scale difference of the offsets at the screen bottom
         int taskHeight = mTaskRect.height();
         float pAtBottomOfStackRect = screenYToCurveProgress(mStackVisibleRect.bottom);
-        float pWithinAffiliateTop = screenYToCurveProgress(mStackVisibleRect.bottom -
-                mWithinAffiliationOffset);
-        float scale = curveProgressToScale(pWithinAffiliateTop);
-        int scaleYOffset = (int) (((1f - scale) * taskHeight) / 2);
-        pWithinAffiliateTop = screenYToCurveProgress(mStackVisibleRect.bottom -
-                mWithinAffiliationOffset + scaleYOffset);
-        float pWithinAffiliateOffset = pAtBottomOfStackRect - pWithinAffiliateTop;
         float pBetweenAffiliateOffset = pAtBottomOfStackRect -
                 screenYToCurveProgress(mStackVisibleRect.bottom - mBetweenAffiliationOffset);
         float pTaskHeightOffset = pAtBottomOfStackRect -
@@ -124,7 +111,6 @@ class StackViewLayoutAlgorithm {
         mInitialScrollP = Math.max(0, pAtFrontMostCardTop);
     }
 
-    /** Update/get the transform */
     /**
      * 由初始化的mTaskProgressMap来构建 view各自OverviewCardTransform 的绘制
      */
@@ -186,7 +172,9 @@ class StackViewLayoutAlgorithm {
      * Initializes the curve.
      */
     private static void initializeCurve() {
-        if (xp != null && px != null) return;
+        if (xp != null && px != null) {
+            return;
+        }
         xp = new float[PRECISION_STEPS + 1];
         px = new float[PRECISION_STEPS + 1];
 
@@ -196,12 +184,7 @@ class StackViewLayoutAlgorithm {
         float x = 0;
 
         for (int xStep = 0; xStep <= PRECISION_STEPS; xStep++) {
-
-            //1-(3000^(1-1.75*x))/3000 就是这样一个先快后面的函数步骤 （0->1）
-            //fx[xStep]：每个阶段的y值  （0->1）
-
             fx[xStep] = logFunc(x);
-            Log.e("fx[xStep]: ", "fx[xStep] : " + xStep + "  " + fx[xStep]);
             x += step;
         }
 
@@ -209,9 +192,6 @@ class StackViewLayoutAlgorithm {
         float pLength = 0;
         float[] dx = new float[PRECISION_STEPS + 1];
         dx[0] = 0;
-
-        //dx[xStep]：每个阶段差值间的距离，即直线弧度
-        //pLength: 总弧度 （0->1.783）
 
         for (int xStep = 1; xStep < PRECISION_STEPS; xStep++) {
             dx[xStep] = (float) Math.sqrt(Math.pow(fx[xStep] - fx[xStep - 1], 2) + Math.pow(step, 2));
@@ -224,21 +204,15 @@ class StackViewLayoutAlgorithm {
         px[PRECISION_STEPS] = 1f;
 
         for (int xStep = 1; xStep <= PRECISION_STEPS; xStep++) {
-
-            //px[xStep]: 当前阶段总弧度，所占总体的百分比() （0->1）
-
+            // px[xStep]: 当前阶段总弧度，所占总体的百分比() （0->1）
             p += Math.abs(dx[xStep] / pLength);
             px[xStep] = p;
         }
-        // Given p(x), calculate the inverse function x(p). This assumes that x(p) is also a valid
-        // function.
 
         int xStep = 0;
         p = 0;
         xp[0] = 0f;
         xp[PRECISION_STEPS] = 1f;
-
-        //xp[PRECISION_STEPS] 这个是每段x的平均渐进累加值，与弧度渐进值的靠近比率。也就是说会越来越快  （0->1）
 
         for (int pStep = 0; pStep < PRECISION_STEPS; pStep++) {
             // Walk forward in px and find the x where px <= p && p < px+1
@@ -278,7 +252,9 @@ class StackViewLayoutAlgorithm {
      * Converts from the progress along the curve to a screen coordinate.
      */
     private int curveProgressToScreenY(float p) {
-        if (p < 0 || p > 1) return mStackVisibleRect.top + (int) (p * mStackVisibleRect.height());
+        if (p < 0 || p > 1) {
+            return mStackVisibleRect.top + (int) (p * mStackVisibleRect.height());
+        }
         float pIndex = p * PRECISION_STEPS;
         int pFloorIndex = (int) Math.floor(pIndex);
         int pCeilIndex = (int) Math.ceil(pIndex);
@@ -291,7 +267,6 @@ class StackViewLayoutAlgorithm {
         return mStackVisibleRect.top + (int) (x * mStackVisibleRect.height());
     }
 
-    /** Converts from the progress along the curve to a scale. */
     /**
      * 扩大的范围线性计算
      *
@@ -299,8 +274,12 @@ class StackViewLayoutAlgorithm {
      * @return 经由缩小值计算后的比率
      */
     private float curveProgressToScale(float p) {
-        if (p < 0) return STACK_PEEK_MIN_SCALE;
-        if (p > 1) return 1f;
+        if (p < 0) {
+            return STACK_PEEK_MIN_SCALE;
+        }
+        if (p > 1) {
+            return 1f;
+        }
         float scaleRange = (1f - STACK_PEEK_MIN_SCALE);
         return STACK_PEEK_MIN_SCALE + (p * scaleRange);
     }
@@ -323,13 +302,12 @@ class StackViewLayoutAlgorithm {
         int xCeilIndex = (int) Math.ceil(xIndex);
         float pFraction = 0;
         if (xFloorIndex < PRECISION_STEPS && (xCeilIndex != xFloorIndex)) {
-
-            //精确到小数部分值计算
+            // 精确到小数部分值计算
             float xFraction = (xIndex - xFloorIndex) / (xCeilIndex - xFloorIndex);
             pFraction = (px[xCeilIndex] - px[xFloorIndex]) * xFraction;
         }
 
-        //转换后的弧度比 和 其小数弧度 的和
+        // 转换后的弧度比 和 其小数弧度 的和
         return px[xFloorIndex] + pFraction;
     }
 }

@@ -396,7 +396,7 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
      */
     void onFirstLayout() {
         for (Map.Entry<StackViewCard, ViewHolder> entry : mViewHolderMap.entrySet()) {
-            entry.getKey().prepareEnterRecentsAnimation();
+            entry.getKey().prepareEnterRecentAnimation();
         }
 
         // If the enter animation started already and we haven't completed a layout yet, do the
@@ -436,7 +436,7 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
                 ctx.currentTaskOccludesLaunchTarget = (launchTargetIndex != -1);
                 ctx.updateListener = mRequestUpdateClippingListener;
                 mLayoutAlgorithm.getStackTransform(i, mStackScroller.getStackScroll(), ctx.currentTaskTransform, null);
-                card.startEnterRecentsAnimation(ctx);
+                card.startEnterRecentAnimation(ctx);
             }
 
             // Add a runnable to the post animation ref counter to clear all the views

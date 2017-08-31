@@ -13,6 +13,7 @@ import com.wirelesspienetwork.overview.misc.Configuration;
  * StackView 滚动逻辑
  */
 class StackViewScroller {
+
     interface Callbacks {
         void onScrollChanged(float p);
     }
@@ -92,7 +93,7 @@ class StackViewScroller {
     }
 
     /**
-     * Returns the amount that the aboslute value of how much the scroll is out of bounds.
+     * Returns the amount that the absolute value of how much the scroll is out of bounds.
      */
     float getScrollAmountOutOfBounds(float scroll) {
         if (scroll < mLayoutAlgorithm.mMinScrollP) {
@@ -162,10 +163,9 @@ class StackViewScroller {
         }
     }
 
-    /****
+    /**
      * OverScroller
-     ****/
-
+     */
     int progressToScrollRange(float p) {
         return (int) (p * mLayoutAlgorithm.mStackVisibleRect.height());
     }
@@ -190,7 +190,7 @@ class StackViewScroller {
     }
 
     /**
-     * Returns whether the overscroller is scrolling.
+     * Returns whether the OverScroller is scrolling.
      */
     boolean isScrolling() {
         return !mScroller.isFinished();

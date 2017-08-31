@@ -323,7 +323,7 @@ class SwipeHelper {
         }
     }
 
-    public interface Callback {
+    interface Callback {
         View getChildAtPosition(MotionEvent ev);
 
         boolean canChildBeDismissed(View v);

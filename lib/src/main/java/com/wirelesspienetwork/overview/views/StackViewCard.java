@@ -14,25 +14,24 @@ import android.widget.LinearLayout;
 
 import com.wirelesspienetwork.overview.misc.Configuration;
 
-/* A task view */
+/**
+ * 多任务管理中每个任务卡片
+ */
 public class StackViewCard extends FrameLayout {
 
-    Configuration mConfig;
-
     float mTaskProgress;
+    Configuration mConfig;
     ObjectAnimator mTaskProgressAnimator;
     LinearLayout mContentContainer;
     View mContent;
 
     // Optimizations
-    ValueAnimator.AnimatorUpdateListener mUpdateDimListener =
-            new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    setTaskProgress((Float) animation.getAnimatedValue());
-                }
-            };
-
+    ValueAnimator.AnimatorUpdateListener mUpdateDimListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            setTaskProgress((Float) animation.getAnimatedValue());
+        }
+    };
 
     public StackViewCard(Context context) {
         super(context);
@@ -54,13 +53,17 @@ public class StackViewCard extends FrameLayout {
 
         mContentContainer = new LinearLayout(context);
         mContentContainer.setOrientation(LinearLayout.VERTICAL);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams params = new LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
         mContentContainer.setLayoutParams(params);
         addView(mContentContainer);
     }
 
-    //将子view的宽高设置入此父view
+    /**
+     * 将子view的宽高设置入此父view
+     */
     @Override
     public void getHitRect(Rect outRect) {
         Rect contentRect = new Rect();
@@ -95,7 +98,8 @@ public class StackViewCard extends FrameLayout {
         int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
         // Measure the content
-        mContentContainer.measure(MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
+        mContentContainer.measure(
+                MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(heightWithoutPadding, MeasureSpec.EXACTLY));
 
         setMeasuredDimension(width, height);
@@ -137,16 +141,17 @@ public class StackViewCard extends FrameLayout {
     }
 
     /**
-     * Prepares this task view for the enter-recents animations.  This is called earlier in the
-     * first layout because the actual animation into recents may take a long time.
+     * Prepares this task view for the enter-recent animations.  This is called earlier in the
+     * first layout because the actual animation into recent may take a long time.
      */
-    void prepareEnterRecentsAnimation() {
+    void prepareEnterRecentAnimation() {
+
     }
 
     /**
-     * Animates this task view as it enters recents
+     * Animates this task view as it enters recent
      */
-    void startEnterRecentsAnimation(final ViewAnimation.OverviewCardEnterContext ctx) {
+    void startEnterRecentAnimation(final ViewAnimation.OverviewCardEnterContext ctx) {
         final CardTransform transform = ctx.currentTaskTransform;
 
         // Animate the tasks up
