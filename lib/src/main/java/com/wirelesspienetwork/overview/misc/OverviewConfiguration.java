@@ -12,7 +12,7 @@ import com.wirelesspienetwork.overview.R;
 
 public class OverviewConfiguration {
 
-    /** Interpolators */
+    /** Interpolator */
     public Interpolator fastOutSlowInInterpolator;
     private Interpolator fastOutLinearInInterpolator;
     public Interpolator linearOutSlowInInterpolator;
@@ -37,7 +37,6 @@ public class OverviewConfiguration {
     public int taskViewTranslationZMinPx;
     public int taskViewTranslationZMaxPx;
 
-    /** Private constructor */
     public OverviewConfiguration(Context context) {
         fastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context,
                 android.R.interpolator.accelerate_decelerate);
@@ -62,12 +61,12 @@ public class OverviewConfiguration {
         taskStackScrollDuration =
                 res.getInteger(R.integer.recents_animate_task_stack_scroll_duration);
 
-        //获取dimen资源值
+        // 获取dimen资源值
         TypedValue widthPaddingPctValue = new TypedValue();
         res.getValue(R.dimen.recents_stack_width_padding_percentage, widthPaddingPctValue, true);
         taskStackWidthPaddingPct = widthPaddingPctValue.getFloat();
 
-        //获取dimen资源值
+        // 获取dimen资源值
         TypedValue stackOverscrollPctValue = new TypedValue();
         res.getValue(R.dimen.recents_stack_overscroll_percentage, stackOverscrollPctValue, true);
         taskStackOverscrollPct = stackOverscrollPctValue.getFloat();

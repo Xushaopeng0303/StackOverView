@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.wirelesspienetwork.overview.views.Overview
+        android:id="@+id/recent_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/id_bottom_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/id_over_view_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/bottom_bar_horizontal_padding"
+            android:paddingRight="@dimen/bottom_bar_horizontal_padding"
+            android:text="返回"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/id_over_view_add"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/app_label"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_window_add" />
+
+        <TextView
+            android:id="@+id/id_over_view_clear_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/bottom_bar_horizontal_padding"
+            android:paddingRight="@dimen/bottom_bar_horizontal_padding"
+            android:text="关闭全部"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+</LinearLayout>

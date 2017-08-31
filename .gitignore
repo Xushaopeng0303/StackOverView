@@ -14,3 +14,4 @@ gradle.properties
 .DS_Store
 /*/*.iml
 app/app.iml
+StackOverView.iml

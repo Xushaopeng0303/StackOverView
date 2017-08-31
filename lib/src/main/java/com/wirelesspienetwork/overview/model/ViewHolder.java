@@ -4,8 +4,12 @@ import android.view.View;
 
 import com.wirelesspienetwork.overview.views.OverviewCard;
 
-public class ViewHolder<V extends View, Model extends Object>
-{
+/**
+ * 任务卡片 ViewHolder
+ * @param <V>   卡片View
+ * @param <Model>   卡片信息Model
+ */
+public class ViewHolder<V extends View, Model> {
     public final V itemView;
     public Model model;
 
@@ -14,8 +18,7 @@ public class ViewHolder<V extends View, Model extends Object>
     private int mCurrentPosition = -1;
     private int mLastPosition = -1;
 
-    public ViewHolder(V view)
-    {
+    public ViewHolder(V view) {
         this.itemView = view;
     }
 
@@ -32,12 +35,11 @@ public class ViewHolder<V extends View, Model extends Object>
         return mLastPosition;
     }
 
-    public OverviewCard getContainer()
-    {
+    public OverviewCard getContainer() {
         return mContainer;
     }
 
-    protected void setContainer(OverviewCard container) {
+    void setContainer(OverviewCard container) {
         if (mContainer != null) {
             mContainer.setContent(null);
         }
