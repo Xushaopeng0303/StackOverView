@@ -2,7 +2,7 @@ package com.wirelesspienetwork.overview.model;
 
 import android.view.View;
 
-import com.wirelesspienetwork.overview.views.OverviewCard;
+import com.wirelesspienetwork.overview.views.StackViewCard;
 
 /**
  * 任务卡片 ViewHolder
@@ -13,7 +13,7 @@ public class ViewHolder<V extends View, Model> {
     public final V itemView;
     public Model model;
 
-    private OverviewCard mContainer;
+    private StackViewCard mContainer;
 
     private int mCurrentPosition = -1;
     private int mLastPosition = -1;
@@ -35,11 +35,11 @@ public class ViewHolder<V extends View, Model> {
         return mLastPosition;
     }
 
-    public OverviewCard getContainer() {
+    public StackViewCard getContainer() {
         return mContainer;
     }
 
-    void setContainer(OverviewCard container) {
+    void setContainer(StackViewCard container) {
         if (mContainer != null) {
             mContainer.setContent(null);
         }

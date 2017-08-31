@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wirelesspienetwork.overview.model.OverviewAdapter;
+import com.wirelesspienetwork.overview.model.StackViewAdapter;
 import com.wirelesspienetwork.overview.model.ViewHolder;
 import com.wirelesspienetwork.overview.views.Overview;
 
@@ -25,7 +25,7 @@ import java.util.Random;
 public class OverviewActivity extends Activity implements View.OnClickListener {
     Overview mRecentView;
     ArrayList<WindowModel> mWindowDataList;
-    OverviewAdapter mAdapter;
+    StackViewAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener {
     }
 
     private void initOverView() {
-        mAdapter = new OverviewAdapter<ViewHolder<View, WindowModel>, WindowModel>(mWindowDataList) {
+        mAdapter = new StackViewAdapter<ViewHolder<View, WindowModel>, WindowModel>(mWindowDataList) {
             @Override
             public ViewHolder<View, WindowModel> onCreateViewHolder(Context context, ViewGroup parent) {
                 View v = View.inflate(context, R.layout.recents_dummy, null);

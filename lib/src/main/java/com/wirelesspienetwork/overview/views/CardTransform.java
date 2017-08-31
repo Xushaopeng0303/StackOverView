@@ -8,7 +8,7 @@ import android.view.animation.Interpolator;
 
 
 /* The transform state for a task view */
-class OverviewCardTransform {
+class CardTransform {
     private int startDelay = 0;
     int translationY = 0;
     float translationZ = 0;
@@ -18,11 +18,11 @@ class OverviewCardTransform {
     public Rect rect = new Rect();
     float p = 0f;
 
-    OverviewCardTransform() {
+    CardTransform() {
         // Do nothing
     }
 
-    public OverviewCardTransform(OverviewCardTransform o) {
+    public CardTransform(CardTransform o) {
         startDelay = o.startDelay;
         translationY = o.translationY;
         translationZ = o.translationZ;

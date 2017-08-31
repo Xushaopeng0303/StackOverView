@@ -19,21 +19,21 @@ package com.wirelesspienetwork.overview.model;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.wirelesspienetwork.overview.misc.OverviewConfiguration;
-import com.wirelesspienetwork.overview.views.OverviewCard;
+import com.wirelesspienetwork.overview.misc.Configuration;
+import com.wirelesspienetwork.overview.views.StackViewCard;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class OverviewAdapter<VH extends ViewHolder, Model extends Object> {
+public abstract class StackViewAdapter<VH extends ViewHolder, Model extends Object> {
 
     /**
      * Task stack callbacks
      */
     public interface Callbacks {
-        void onCardAdded(OverviewAdapter adapter, int position);
+        void onCardAdded(StackViewAdapter adapter, int position);
 
-        void onCardRemoved(OverviewAdapter adapter, int position);
+        void onCardRemoved(StackViewAdapter adapter, int position);
     }
 
     private Callbacks mCallbacks;
@@ -41,7 +41,7 @@ public abstract class OverviewAdapter<VH extends ViewHolder, Model extends Objec
     //这个只是单纯用来计数的
     private List<Model> mItems = new ArrayList<>();
 
-    protected OverviewAdapter(List<Model> models) {
+    protected StackViewAdapter(List<Model> models) {
         if (models != null) {
             mItems = models;
         }
@@ -124,9 +124,9 @@ public abstract class OverviewAdapter<VH extends ViewHolder, Model extends Objec
         return mItems.size();
     }
 
-    public final VH createViewHolder(Context context, OverviewConfiguration config) {
+    public final VH createViewHolder(Context context, Configuration config) {
 
-        OverviewCard container = new OverviewCard(context);
+        StackViewCard container = new StackViewCard(context);
         container.setConfig(config);
         VH vh = onCreateViewHolder(context, container);
         vh.setContainer(container);

@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.wirelesspienetwork.overview.misc.OverviewConfiguration;
+import com.wirelesspienetwork.overview.misc.Configuration;
 
 /* A task view */
-public class OverviewCard extends FrameLayout {
+public class StackViewCard extends FrameLayout {
 
-    OverviewConfiguration mConfig;
+    Configuration mConfig;
 
     float mTaskProgress;
     ObjectAnimator mTaskProgressAnimator;
@@ -34,17 +34,17 @@ public class OverviewCard extends FrameLayout {
             };
 
 
-    public OverviewCard(Context context) {
+    public StackViewCard(Context context) {
         super(context);
         init(context);
     }
 
-    public OverviewCard(Context context, AttributeSet attrs) {
+    public StackViewCard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public OverviewCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StackViewCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -72,7 +72,7 @@ public class OverviewCard extends FrameLayout {
         outRect.bottom = outRect.top + contentRect.height();
     }
 
-    public void setConfig(OverviewConfiguration config) {
+    public void setConfig(Configuration config) {
         mConfig = config;
     }
 
@@ -104,11 +104,11 @@ public class OverviewCard extends FrameLayout {
     /**
      * Synchronizes this view's properties with the task's transform
      */
-    void updateViewPropertiesToCardTransform(OverviewCardTransform toTransform, int duration) {
+    void updateViewPropertiesToCardTransform(CardTransform toTransform, int duration) {
         updateViewPropertiesToCardTransform(toTransform, duration, null);
     }
 
-    void updateViewPropertiesToCardTransform(OverviewCardTransform toTransform, int duration,
+    void updateViewPropertiesToCardTransform(CardTransform toTransform, int duration,
                                              ValueAnimator.AnimatorUpdateListener updateCallback) {
         // Apply the transform
         toTransform.applyToTaskView(this, duration, mConfig.fastOutSlowInInterpolator, false,
@@ -133,7 +133,7 @@ public class OverviewCard extends FrameLayout {
      * Resets this view's properties
      */
     void resetViewProperties() {
-        OverviewCardTransform.reset(this);
+        CardTransform.reset(this);
     }
 
     /**
@@ -147,7 +147,7 @@ public class OverviewCard extends FrameLayout {
      * Animates this task view as it enters recents
      */
     void startEnterRecentsAnimation(final ViewAnimation.OverviewCardEnterContext ctx) {
-        final OverviewCardTransform transform = ctx.currentTaskTransform;
+        final CardTransform transform = ctx.currentTaskTransform;
 
         // Animate the tasks up
         int frontIndex = (ctx.currentStackViewCount - ctx.currentStackViewIndex - 1);

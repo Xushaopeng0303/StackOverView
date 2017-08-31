@@ -6,16 +6,16 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
-import com.wirelesspienetwork.overview.misc.OverviewConfiguration;
+import com.wirelesspienetwork.overview.misc.Configuration;
 
-class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
+class StackViewTouchHandler implements SwipeHelper.Callback {
     private static final int INACTIVE_POINTER_ID = -1;
 
     private static final int TaskStackOverscrollRange = 150;
 
-    private OverviewConfiguration mConfig;
-    private OverviewStackView mSv;
-    private OverviewStackViewScroller mScroller;
+    private Configuration mConfig;
+    private StackView mSv;
+    private StackViewScroller mScroller;
     private VelocityTracker mVelocityTracker;
 
     private boolean mIsScrolling;
@@ -26,7 +26,7 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
     private int mInitialMotionX, mInitialMotionY;
     private int mLastMotionX, mLastMotionY;
     private int mActivePointerId = INACTIVE_POINTER_ID;
-    private OverviewCard mActiveTaskView = null;
+    private StackViewCard mActiveTaskView = null;
 
     private int mMinimumVelocity;
     private int mMaximumVelocity;
@@ -38,8 +38,8 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
     private SwipeHelper mSwipeHelper;
     private boolean mInterceptedBySwipeHelper;
 
-    OverviewStackViewTouchHandler(Context context, OverviewStackView sv,
-                                         OverviewConfiguration config, OverviewStackViewScroller scroller) {
+    StackViewTouchHandler(Context context, StackView sv,
+                          Configuration config, StackViewScroller scroller) {
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
@@ -74,10 +74,10 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
     }
 
     /** Returns the view at the specified coordinates */
-    OverviewCard findViewAtPoint(int x, int y) {
+    StackViewCard findViewAtPoint(int x, int y) {
         int childCount = mSv.getChildCount();
         for (int i = childCount - 1; i >= 0; i--) {
-            OverviewCard tv = (OverviewCard) mSv.getChildAt(i);
+            StackViewCard tv = (StackViewCard) mSv.getChildAt(i);
             if (tv.getVisibility() == View.VISIBLE) {
                 if (mSv.isTransformedTouchPointInView(x, y, tv)) {
                     return tv;
@@ -333,7 +333,7 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
 
     @Override
     public void onBeginDrag(View v) {
-        OverviewCard tv = (OverviewCard) v;
+        StackViewCard tv = (StackViewCard) v;
         // Disallow touch events from this task view
         tv.setTouchEnabled(false);
         // Disallow parents from intercepting touch events
@@ -350,7 +350,7 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
 
     @Override
     public void onChildDismissed(View v) {
-        OverviewCard tv = (OverviewCard) v;
+        StackViewCard tv = (StackViewCard) v;
         // Re-enable touch events from this task view
         tv.setTouchEnabled(true);
         // Remove the task view from the stack
@@ -359,7 +359,7 @@ class OverviewStackViewTouchHandler implements SwipeHelper.Callback {
 
     @Override
     public void onSnapBackCompleted(View v) {
-        OverviewCard tv = (OverviewCard) v;
+        StackViewCard tv = (StackViewCard) v;
         // Re-enable touch events from this task view
         tv.setTouchEnabled(true);
     }

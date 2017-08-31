@@ -6,21 +6,21 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.wirelesspienetwork.overview.misc.OverviewConfiguration;
-import com.wirelesspienetwork.overview.model.OverviewAdapter;
+import com.wirelesspienetwork.overview.misc.Configuration;
+import com.wirelesspienetwork.overview.model.StackViewAdapter;
 import com.wirelesspienetwork.overview.model.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/* The visual representation of a task stack view */
-public class OverviewStackView extends FrameLayout implements OverviewAdapter.Callbacks, OverviewStackViewScroller.Callbacks,
+public class StackView extends FrameLayout implements StackViewAdapter.Callbacks, StackViewScroller.Callbacks,
         ObjectPool.ObjectPoolConsumer<ViewHolder, Integer> {
 
     /**
@@ -32,16 +32,16 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         void onAllCardsDismissed();
     }
 
-    OverviewConfiguration mConfig;
+    Configuration mConfig;
 
-    OverviewAdapter mStack;
-    OverviewStackViewLayoutAlgorithm mLayoutAlgorithm;
-    OverviewStackViewScroller mStackScroller;
-    OverviewStackViewTouchHandler mTouchHandler;
+    StackViewAdapter mStackAdapter;
+    StackViewLayoutAlgorithm mLayoutAlgorithm;
+    StackViewScroller mStackScroller;
+    StackViewTouchHandler mTouchHandler;
     Callbacks mCb;
     ObjectPool<ViewHolder, Integer> mViewPool;
-    ArrayList<OverviewCardTransform> mCurrentCardTransforms = new ArrayList<>();
-    HashMap<OverviewCard, ViewHolder> mViewHolderMap = new HashMap<>();
+    ArrayList<CardTransform> mCurrentCardTransforms = new ArrayList<>();
+    HashMap<StackViewCard, ViewHolder> mViewHolderMap = new HashMap<>();
 
     Rect mOverviewStackBounds = new Rect();
 
@@ -55,7 +55,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
     ViewAnimation.OverviewCardEnterContext mStartEnterAnimationContext;
     int[] mTmpVisibleRange = new int[2];
     Rect mTmpRect = new Rect();
-    OverviewCardTransform mTmpTransform = new OverviewCardTransform();
+    CardTransform mTmpTransform = new CardTransform();
     LayoutInflater mInflater;
 
     ValueAnimator.AnimatorUpdateListener mRequestUpdateClippingListener =
@@ -66,17 +66,29 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
                 }
             };
 
-    public OverviewStackView(Context context, OverviewAdapter adapter, OverviewConfiguration config) {
+    public StackView(Context context) {
+        super(context);
+    }
+
+    public StackView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public StackView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public StackView(Context context, StackViewAdapter adapter, Configuration config) {
         super(context);
         mConfig = config;
-        mStack = adapter;
-        mStack.setCallbacks(this);
+        mStackAdapter = adapter;
+        mStackAdapter.setCallbacks(this);
         mViewPool = new ObjectPool<>(context, this);
         mInflater = LayoutInflater.from(context);
-        mLayoutAlgorithm = new OverviewStackViewLayoutAlgorithm(mConfig);
-        mStackScroller = new OverviewStackViewScroller(context, mConfig, mLayoutAlgorithm);
+        mLayoutAlgorithm = new StackViewLayoutAlgorithm(mConfig);
+        mStackScroller = new StackViewScroller(context, mConfig, mLayoutAlgorithm);
         mStackScroller.setCallbacks(this);
-        mTouchHandler = new OverviewStackViewTouchHandler(context, this, mConfig, mStackScroller);
+        mTouchHandler = new StackViewTouchHandler(context, this, mConfig, mStackScroller);
     }
 
     /**
@@ -116,10 +128,10 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         }
     }
 
-    public OverviewCard getChildViewForIndex(int index) {
+    public StackViewCard getChildViewForIndex(int index) {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
-            OverviewCard tv = (OverviewCard) getChildAt(i);
+            StackViewCard tv = (StackViewCard) getChildAt(i);
             ViewHolder holder = mViewHolderMap.get(tv);
             if (holder != null && holder.getPosition() == index) {
                 return tv;
@@ -128,7 +140,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         return null;
     }
 
-    private boolean updateStackTransforms(ArrayList<OverviewCardTransform> cardTransforms,
+    private boolean updateStackTransforms(ArrayList<CardTransform> cardTransforms,
                                           int itemCount,
                                           float stackScroll,
                                           int[] visibleRangeOut,
@@ -146,7 +158,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         if (transformCount < itemCount) {
             // If there are less transforms than cards, then add as many transforms as necessary
             for (int i = transformCount; i < itemCount; i++) {
-                cardTransforms.add(new OverviewCardTransform());
+                cardTransforms.add(new CardTransform());
             }
         } else if (transformCount > itemCount) {
             // If there are more transforms than cards, then just subset the transform list
@@ -154,11 +166,11 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         }
 
         // Update the stack transforms
-        OverviewCardTransform prevTransform = null;
+        CardTransform prevTransform = null;
         for (int i = itemCount - 1; i >= 0; i--) {
 
-            // 这里将空的 OverviewCardTransform 丢进去
-            OverviewCardTransform transform = mLayoutAlgorithm.getStackTransform(i,
+            // 这里将空的 CardTransform 丢进去
+            CardTransform transform = mLayoutAlgorithm.getStackTransform(i,
                     stackScroll, cardTransforms.get(i), prevTransform);
             if (transform.visible) {
                 if (frontMostVisibleIndex < 0) {
@@ -178,8 +190,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
             }
 
             if (boundTranslationsToRect) {
-                transform.translationY = Math.min(transform.translationY,
-                        mLayoutAlgorithm.mViewRect.bottom);
+                transform.translationY = Math.min(transform.translationY, mLayoutAlgorithm.mViewRect.bottom);
             }
             prevTransform = transform;
         }
@@ -198,14 +209,14 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
 
             float stackScroll = mStackScroller.getStackScroll();
             int[] visibleRange = mTmpVisibleRange;
-            boolean isValidVisibleRange = updateStackTransforms(mCurrentCardTransforms, mStack.getNumberOfItems(),
+            boolean isValidVisibleRange = updateStackTransforms(mCurrentCardTransforms, mStackAdapter.getNumberOfItems(),
                     stackScroll, visibleRange, false);
 
-            ArrayList<Map.Entry<OverviewCard, ViewHolder>> entrySet = new ArrayList<>(mViewHolderMap.entrySet());
+            ArrayList<Map.Entry<StackViewCard, ViewHolder>> entrySet = new ArrayList<>(mViewHolderMap.entrySet());
 
             Map<Integer, ViewHolder> reusedMap = new HashMap<>();
 
-            for (Map.Entry<OverviewCard, ViewHolder> entry : entrySet) {
+            for (Map.Entry<StackViewCard, ViewHolder> entry : entrySet) {
                 int position = entry.getValue().getPosition();
                 if (visibleRange[1] <= position && position <= visibleRange[0]) {
                     ViewHolder vh = entry.getValue();
@@ -217,7 +228,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
 
             // Pick up all the newly visible children and update all the existing children
             for (int i = visibleRange[0]; isValidVisibleRange && i >= visibleRange[1]; i--) {
-                OverviewCardTransform transform = mCurrentCardTransforms.get(i);
+                CardTransform transform = mCurrentCardTransforms.get(i);
 
                 ViewHolder vh = reusedMap.get(i);
                 if (vh == null) {
@@ -273,7 +284,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
      */
     void updateMinMaxScroll(boolean boundScrollToNewMinMax) {
         // Compute the min and max scroll values
-        mLayoutAlgorithm.computeMinMaxScroll(mStack.getNumberOfItems());
+        mLayoutAlgorithm.computeMinMaxScroll(mStackAdapter.getNumberOfItems());
 
         // Debug logging
         if (boundScrollToNewMinMax) {
@@ -319,9 +330,9 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
-        //空间大部分的初始化都在这里
+        // 空间大部分的初始化都在这里
 
-        // Compute our stack/task rects
+        // Compute our stack/task rect
         Rect taskStackBounds = new Rect(mOverviewStackBounds);
         computeRects(width, height, taskStackBounds);
 
@@ -336,18 +347,17 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         // Measure each of the TaskViews
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
-            OverviewCard tv = (OverviewCard) getChildAt(i);
+            StackViewCard tv = (StackViewCard) getChildAt(i);
             if (tv.getBackground() != null) {
                 tv.getBackground().getPadding(mTmpRect);
             } else {
                 mTmpRect.setEmpty();
             }
             tv.measure(
-                    MeasureSpec.makeMeasureSpec(
-                            mLayoutAlgorithm.mTaskRect.width() + mTmpRect.left + mTmpRect.right,
-                            MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(
-                            mLayoutAlgorithm.mTaskRect.height() + mTmpRect.top + mTmpRect.bottom, MeasureSpec.EXACTLY));
+                    MeasureSpec.makeMeasureSpec(mLayoutAlgorithm.mTaskRect.width() + mTmpRect.left
+                            + mTmpRect.right, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(mLayoutAlgorithm.mTaskRect.height() + mTmpRect.top
+                            + mTmpRect.bottom, MeasureSpec.EXACTLY));
         }
 
         setMeasuredDimension(width, height);
@@ -363,7 +373,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         // Layout each of the children
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
-            OverviewCard tv = (OverviewCard) getChildAt(i);
+            StackViewCard tv = (StackViewCard) getChildAt(i);
             if (tv.getBackground() != null) {
                 tv.getBackground().getPadding(mTmpRect);
             } else {
@@ -385,26 +395,23 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
      * Handler for the first layout.
      */
     void onFirstLayout() {
-        int offscreenY = mLayoutAlgorithm.mViewRect.bottom -
-                (mLayoutAlgorithm.mTaskRect.top - mLayoutAlgorithm.mViewRect.top);
-
-        for (Map.Entry<OverviewCard, ViewHolder> entry : mViewHolderMap.entrySet()) {
+        for (Map.Entry<StackViewCard, ViewHolder> entry : mViewHolderMap.entrySet()) {
             entry.getKey().prepareEnterRecentsAnimation();
         }
 
         // If the enter animation started already and we haven't completed a layout yet, do the
         // enter animation now
         if (mStartEnterAnimationRequestedAfterLayout) {
-            startEnterRecentsAnimation(mStartEnterAnimationContext);
+            startEnterRecentAnimation(mStartEnterAnimationContext);
             mStartEnterAnimationRequestedAfterLayout = false;
             mStartEnterAnimationContext = null;
         }
     }
 
     /**
-     * Requests this task stacks to start it's enter-recents animation
+     * Requests this task stacks to start it's enter-recent animation
      */
-    public void startEnterRecentsAnimation(ViewAnimation.OverviewCardEnterContext ctx) {
+    public void startEnterRecentAnimation(ViewAnimation.OverviewCardEnterContext ctx) {
         // If we are still waiting to layout, then just defer until then
         if (mAwaitingFirstLayout) {
             mStartEnterAnimationRequestedAfterLayout = true;
@@ -414,15 +421,15 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
 
         int childCount = getChildCount();
 
-        if (mStack.getNumberOfItems() > 0) {
+        if (mStackAdapter.getNumberOfItems() > 0) {
             // Find the launch target task
 
             int launchTargetIndex = childCount == 0 ? -1 : 0;
 
             for (int i = 0; i < childCount; ++i) {
-                OverviewCard card = (OverviewCard) getChildAt(i);
+                StackViewCard card = (StackViewCard) getChildAt(i);
 
-                ctx.currentTaskTransform = new OverviewCardTransform();
+                ctx.currentTaskTransform = new CardTransform();
                 ctx.currentStackViewIndex = i;
                 ctx.currentStackViewCount = childCount;
                 ctx.currentTaskRect = mLayoutAlgorithm.mTaskRect;
@@ -448,14 +455,14 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         return frame.contains((int) x, (int) y);
     }
 
-    public void onCardAdded(OverviewAdapter stack, int position) {
+    public void onCardAdded(StackViewAdapter stack, int position) {
         requestSynchronizeStackViewsWithModel();
     }
 
-    public void onCardRemoved(OverviewAdapter stack, int removedTask) {
+    public void onCardRemoved(StackViewAdapter stack, int removedTask) {
         // Remove the view associated with this task, we can't rely on updateTransforms
         // to work here because the task is no longer in the list
-        OverviewCard tv = getChildViewForIndex(removedTask);
+        StackViewCard tv = getChildViewForIndex(removedTask);
         ViewHolder holder = mViewHolderMap.get(tv);
 
         // Notify the callback that we've removed the task and it can clean up after it
@@ -499,21 +506,21 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
 
         // If there are no remaining tasks, then either unfilter the current stack, or just close
         // the activity if there are no filtered stacks
-        if (mStack.getNumberOfItems() == 0) {
+        if (mStackAdapter.getNumberOfItems() == 0) {
             mCb.onAllCardsDismissed();
         }
     }
 
-    public void onCardDismissed(OverviewCard tv) {
+    public void onCardDismissed(StackViewCard tv) {
 
         ViewHolder vh = mViewHolderMap.get(tv);
         int taskIndex = vh.getPosition();
-        mStack.notifyDataSetRemoved(taskIndex);
+        mStackAdapter.notifyDataSetRemoved(taskIndex);
     }
 
     @Override
     public ViewHolder createObject(Context context) {
-        return mStack.createViewHolder(context, mConfig);
+        return mStackAdapter.createViewHolder(context, mConfig);
     }
 
     @Override
@@ -533,8 +540,8 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
 
         mViewHolderMap.put(vh.getContainer(), vh);
         vh.setPosition(position);
-        mStack.bindViewHolder(vh, position);
-        OverviewCard container = vh.getContainer();
+        mStackAdapter.bindViewHolder(vh, position);
+        StackViewCard container = vh.getContainer();
 
         // Find the index where this task should be placed in the stack
         int insertIndex = -1;
@@ -542,7 +549,7 @@ public class OverviewStackView extends FrameLayout implements OverviewAdapter.Ca
         if (taskIndex != -1) {
             int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
-                OverviewCard insertTV = (OverviewCard) getChildAt(i);
+                StackViewCard insertTV = (StackViewCard) getChildAt(i);
                 ViewHolder holder = mViewHolderMap.get(insertTV);
                 if (taskIndex < holder.getPosition()) {
                     insertIndex = i;

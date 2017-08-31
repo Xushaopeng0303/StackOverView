@@ -22,10 +22,10 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.wirelesspienetwork.overview.misc.OverviewConfiguration;
-import com.wirelesspienetwork.overview.model.OverviewAdapter;
+import com.wirelesspienetwork.overview.misc.Configuration;
+import com.wirelesspienetwork.overview.model.StackViewAdapter;
 
-public class Overview extends FrameLayout implements OverviewStackView.Callbacks {
+public class Overview extends FrameLayout implements StackView.Callbacks {
 
     public interface RecentViewsCallbacks {
         void onCardDismissed(int position);
@@ -33,10 +33,12 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
         void onAllCardsDismissed();
     }
 
-    OverviewStackView mStackView;
-    OverviewConfiguration mConfig;
-    OverviewAdapter mAdapter;
+    StackView mStackView;
+    Configuration mConfig;
+    StackViewAdapter mAdapter;
     RecentViewsCallbacks mCallbacks;
+
+    Rect mStackBounds = new Rect();
 
     public Overview(Context context) {
         super(context);
@@ -54,7 +56,7 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
     }
 
     private void init(Context context) {
-        mConfig = new OverviewConfiguration(context);
+        mConfig = new Configuration(context);
     }
 
     /**
@@ -67,21 +69,21 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
     /**
      * Set/get the bsp root node
      */
-    public void setTaskStack(OverviewAdapter adapter) {
+    public void setTaskStack(StackViewAdapter adapter) {
 
         if (mStackView != null) {
             removeView(mStackView);
         }
 
         mAdapter = adapter;
-        mStackView = new OverviewStackView(getContext(), adapter, mConfig);
+        mStackView = new StackView(getContext(), adapter, mConfig);
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mStackView.setLayoutParams(params);
 
         mStackView.setCallbacks(this);
         mStackView.animate().start();
 
-        //所以说 OverviewStackView 才是重点
+        // 所以说 OverviewStackView 才是重点
         addView(mStackView);
     }
 
@@ -94,9 +96,8 @@ public class Overview extends FrameLayout implements OverviewStackView.Callbacks
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
         if (mStackView != null) {
-            Rect stackBounds = new Rect();
-            mConfig.getOverviewStackBounds(width, height, stackBounds);
-            mStackView.setStackInsetRect(stackBounds);
+            mConfig.getOverviewStackBounds(width, height, mStackBounds);
+            mStackView.setStackInsetRect(mStackBounds);
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

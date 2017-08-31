@@ -10,7 +10,7 @@ import android.view.animation.Interpolator;
 
 import com.wirelesspienetwork.overview.R;
 
-public class OverviewConfiguration {
+public class Configuration {
 
     /** Interpolator */
     public Interpolator fastOutSlowInInterpolator;
@@ -37,7 +37,7 @@ public class OverviewConfiguration {
     public int taskViewTranslationZMinPx;
     public int taskViewTranslationZMaxPx;
 
-    public OverviewConfiguration(Context context) {
+    public Configuration(Context context) {
         fastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context,
                 android.R.interpolator.accelerate_decelerate);
         fastOutLinearInInterpolator = AnimationUtils.loadInterpolator(context,
