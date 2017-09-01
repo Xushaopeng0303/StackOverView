@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Height of notification icons in the status bar -->
-    <dimen name="status_bar_icon_size">@*android:dimen/status_bar_icon_size</dimen>
-
-    <!-- Width for the notification panel and related windows -->
-    <dimen name="match_parent">-1px</dimen>
 
     <!-- The min translation in the Z index for the last task. -->
     <dimen name="recent_task_view_z_min">20dp</dimen>
@@ -23,8 +18,5 @@
 
     <!-- The min alpha to apply to a task affiliation group color. -->
     <item name="recent_task_affiliation_color_min_alpha_percentage" format="float" type="dimen">0.6</item>
-
-    <dimen name="status_bar_height">@*android:dimen/status_bar_height</dimen>
-    <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
 
 </resources>
