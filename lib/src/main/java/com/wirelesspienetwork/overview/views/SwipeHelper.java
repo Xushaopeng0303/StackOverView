@@ -276,8 +276,8 @@ class SwipeHelper {
         float perpendicularVelocity = getPerpendicularVelocity(velocityTracker);
         float escapeVelocity = SWIPE_ESCAPE_VELOCITY * mDensityScale;
         float translation = getTranslation(mCurrView);
-        // Decide whether to dismiss the current view
-        boolean childSwipedFarEnough = Math.abs(translation) > 0.6 * getSize(mCurrView);
+        // 根据Card平移的速度和位移量判断是否移除
+        boolean childSwipedFarEnough = Math.abs(translation) > 0.25 * getSize(mCurrView);
         boolean childSwipedFastEnough = (Math.abs(velocity) > escapeVelocity) &&
                 (Math.abs(velocity) > Math.abs(perpendicularVelocity)) &&
                 (velocity > 0) == (translation > 0);
