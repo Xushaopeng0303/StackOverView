@@ -94,6 +94,6 @@ public class Configuration {
      */
     public void getOverviewStackBounds(int windowWidth, int windowHeight,
                                        Rect taskStackBounds) {
-        taskStackBounds.set(0, 64, windowWidth, windowHeight);
+        taskStackBounds.set(0, 0, windowWidth, windowHeight);
     }
 }

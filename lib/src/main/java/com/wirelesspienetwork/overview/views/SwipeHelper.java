@@ -252,7 +252,7 @@ class SwipeHelper {
             if (Math.abs(amount) >= size) {
                 amount = amount > 0 ? maxScrollDistance : -maxScrollDistance;
             } else {
-                amount = maxScrollDistance * (float) Math.sin((amount/size)*(Math.PI/2));
+                amount = maxScrollDistance * (float) Math.sin((amount / size) * (Math.PI / 2));
             }
         }
         setTranslation(mCurrView, amount);

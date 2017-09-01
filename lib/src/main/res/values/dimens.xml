@@ -7,10 +7,10 @@
     <!-- The max translation in the Z index for the last task. -->
     <dimen name="recent_task_view_z_max">80dp</dimen>
 
-    <!-- The side padding for the task stack as a percentage of the width. -->
-    <item name="recent_stack_width_padding_percentage" format="float" type="dimen">0.02</item>
+    <!-- 卡片距离屏幕边距占屏幕一半百分比 -->
+    <item name="recent_stack_width_padding_percentage" format="float" type="dimen">0</item>
 
-    <!-- The over scroll percentage allowed on the stack. -->
+    <!-- 卡片下拉时弹性拉伸百分比 -->
     <item name="recent_stack_over_scroll_percentage" format="float" type="dimen">0.0875</item>
 
     <!-- The top offset for the task stack. -->

@@ -311,10 +311,10 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
     }
 
     /**
-     * Computes the stack and task rects
+     * Computes the stack and task rect
      */
-    public void computeRects(int windowWidth, int windowHeight, Rect taskStackBounds) {
-        // Compute the rects in the stack algorithm
+    public void computeRect(int windowWidth, int windowHeight, Rect taskStackBounds) {
+        // Compute the rect in the stack algorithm
         mLayoutAlgorithm.computeRect(windowWidth, windowHeight, taskStackBounds);
 
         // Update the scroll bounds
@@ -334,7 +334,7 @@ public class StackView extends FrameLayout implements StackViewAdapter.Callbacks
 
         // Compute our stack/task rect
         Rect taskStackBounds = new Rect(mOverviewStackBounds);
-        computeRects(width, height, taskStackBounds);
+        computeRect(width, height, taskStackBounds);
 
         // If this is the first layout, then scroll to the front of the stack and synchronize the
         // stack views immediately to load all the views

@@ -10,7 +10,7 @@ import java.util.HashMap;
 class StackViewLayoutAlgorithm {
 
     // 最小卡片的显示比率
-    private static final float STACK_PEEK_MIN_SCALE = 0.95f;
+    private static final float STACK_PEEK_MIN_SCALE = 0.8f;
 
     private Configuration mConfig;
 
@@ -46,7 +46,7 @@ class StackViewLayoutAlgorithm {
     }
 
     /**
-     * Computes the stack and task rects
+     * Computes the stack and task rect
      */
     void computeRect(int windowWidth, int windowHeight, Rect taskStackBounds) {
         // Compute the stack rect
@@ -63,8 +63,7 @@ class StackViewLayoutAlgorithm {
         int width = mStackRect.width();
         int height = mStackRect.height();
         int left = mStackRect.left + (mStackRect.width() - width) / 2;
-        mTaskRect.set(left, mStackRect.top,
-                left + width, mStackRect.top + height);
+        mTaskRect.set(left, mStackRect.top, left + width, mStackRect.top + height);
 
         // 这里设置CardView之间的各种参数，Update the affiliation offsets
         float visibleTaskPct = 0.5f;
@@ -96,7 +95,7 @@ class StackViewLayoutAlgorithm {
                 screenYToCurveProgress(mStackVisibleRect.bottom - (mStackVisibleRect.bottom - mStackRect.bottom));
 
         // Update the task offsets
-        float pAtFrontMostCardTop = 0.5f;
+        float pAtFrontMostCardTop = 0.2f;
         for (int i = 0; i < itemCount; i++) {
             mTaskProgressMap.put(i, pAtFrontMostCardTop);
 
