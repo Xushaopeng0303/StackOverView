@@ -10,7 +10,7 @@
         android:persistent="true">
 
         <activity
-            android:name="com.wirelesspienetwork.overviewexample.OverviewActivity"
+            android:name="com.wirelesspienetwork.overviewexample.MainActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:stateNotNeeded="true">

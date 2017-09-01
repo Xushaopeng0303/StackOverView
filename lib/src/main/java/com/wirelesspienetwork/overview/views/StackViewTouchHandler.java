@@ -243,7 +243,7 @@ class StackViewTouchHandler implements SwipeHelper.Callback {
                     if (Float.compare(overScrollAmount, 0f) != 0) {
                         // Bound the OverScroll to a fixed amount, and inversely scale the y-movement
                         // relative to how close we are to the max OverScroll
-                        float maxOverScroll = mConfig.taskStackOverscrollPct;
+                        float maxOverScroll = mConfig.taskStackOverScrollPct;
                         deltaP *= (1f - (Math.min(maxOverScroll, overScrollAmount) / maxOverScroll));
                     }
                     mScroller.setStackScroll(curStackScroll + deltaP);

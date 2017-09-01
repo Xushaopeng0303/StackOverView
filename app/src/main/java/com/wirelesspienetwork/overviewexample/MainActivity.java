@@ -22,7 +22,7 @@ import java.util.Random;
 /**
  * The main Recent activity that is started from AlternateRecentComponent.
  */
-public class OverviewActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
     OverView mRecentView;
     ArrayList<WindowModel> mWindowDataList;
     StackViewAdapter mAdapter;
