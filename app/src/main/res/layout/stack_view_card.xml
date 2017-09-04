@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@android:color/transparent"
     android:layout_gravity="center_horizontal|top">
 
     <RelativeLayout
         android:id="@+id/id_over_view_title_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#ffffff"
+        android:background="@drawable/bg_stack_view_card_title"
         android:gravity="center_vertical">
 
         <ImageView
@@ -51,7 +52,8 @@
     <FrameLayout
         android:id="@+id/id_over_view_image_view"
         android:layout_width="match_parent"
-        android:layout_height="1000dp">
+        android:layout_height="1000dp"
+        android:background="@drawable/bg_stack_view_card_content">
     </FrameLayout>
 </LinearLayout>
 

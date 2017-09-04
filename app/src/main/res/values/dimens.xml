@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <dimen name="bottom_bar_horizontal_padding">10dp</dimen>
+    <dimen name="stack_view_card_bg_radius">6dp</dimen>
 </resources>

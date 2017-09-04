@@ -93,14 +93,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mAdapter = new StackViewAdapter<ViewHolder<View, WindowModel>, WindowModel>(mWindowDataList) {
             @Override
             public ViewHolder<View, WindowModel> onCreateViewHolder(Context context, ViewGroup parent) {
-                View v = View.inflate(context, R.layout.recents_dummy, null);
+                View v = View.inflate(context, R.layout.stack_view_card, null);
                 return new ViewHolder<>(v);
             }
 
             @Override
             public void onBindViewHolder(ViewHolder<View, WindowModel> viewHolder) {
                 FrameLayout imageView = viewHolder.itemView.findViewById(R.id.id_over_view_image_view);
-                imageView.setBackgroundColor(viewHolder.model.colorId);
+//                imageView.setBackgroundColor(viewHolder.model.colorId);
                 ImageView closeView = viewHolder.itemView.findViewById(R.id.id_over_view_close);
                 closeView.setOnClickListener(new View.OnClickListener() {
                     @Override
